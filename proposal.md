@@ -2,7 +2,7 @@
 ## An Empirical Information Bottleneck Comparison of Humans and Large Language Models
 
 ### Authors
-- Jeethu Srinivas Amuthan (NYU, Psychology)
+- Jeethu Srinivas Amuthan (NYU, CDS)
 - Dhiwahar Adhithya Kennady (NYU, CDS)
 
 ---
