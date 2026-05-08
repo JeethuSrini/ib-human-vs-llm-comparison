@@ -1,3 +1,7 @@
 # Pin loosely for local venv: pip install -r requirements.txt
 requests>=2.28.0
+tqdm>=4.0.0
+flask>=3.0.0
+matplotlib>=3.8.0
+numpy>=1.24.0
 pytest>=7.0.0

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 from features.human_study import export_trial_manifest
-from features.model_inference import OpenRouterAuthError
+from features.model_inference import OpenRouterAuthError, OpenRouterRateLimitError
 from features.results_io import build_model_run_dir, load_dataset, make_run_id, save_results
 from features.trial_generation import run_grid
 from shared.config import (
@@ -108,6 +108,10 @@ def main() -> None:
         f"Approx API calls planned: ~{len(models) * len(N_EXAMPLES_PER_PROMPT) * n_trials * calls_per_trial}"
     )
 
+    run_tag = "smoke" if args.smoke else "full"
+    mode_tag = "summarize" if args.summarize else "combined" if args.combined else "separate"
+    checkpoint_path = RESULTS_DIR / run_tag / mode_tag / "checkpoint.jsonl"
+
     try:
         summary, logs = run_grid(
             models,
@@ -118,15 +122,25 @@ def main() -> None:
             api_key,
             combined=args.combined,
             summarize=args.summarize,
+            checkpoint_path=checkpoint_path,
         )
     except OpenRouterAuthError as exc:
-        print(f"\nFATAL: {exc}", file=sys.stderr)
+        print(f"\nFATAL auth error: {exc}", file=sys.stderr)
         print(
             "Check that OPENROUTER_API_KEY is set to a valid key from "
             "https://openrouter.ai/keys (no quotes, no trailing whitespace).",
             file=sys.stderr,
         )
         sys.exit(2)
+    except OpenRouterRateLimitError as exc:
+        print(f"\nFATAL rate-limit: {exc}", file=sys.stderr)
+        print(
+            "The model is being rate-limited by the upstream provider after 3 retries.\n"
+            "Progress has been saved to the checkpoint. Wait a few minutes then re-run\n"
+            "the same command — it will resume from where it stopped.",
+            file=sys.stderr,
+        )
+        sys.exit(3)
 
     if args.summarize:
         mode_tag = "summarize"

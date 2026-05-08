@@ -15,10 +15,10 @@ MODELS = [
     "meta-llama/llama-3.2-1b-instruct",
     "meta-llama/llama-3.2-3b-instruct",
     "meta-llama/llama-3.2-11b-vision-instruct",
-    "meta-llama/llama-3.3-70b-instruct",
-    "qwen/qwen3-8b",
-    "qwen/qwen3-14b",
-    "qwen/qwen3-32b",
+    # "meta-llama/llama-3.3-70b-instruct",  # excluded: answers reasoning with partner name, not city
+    "qwen/qwen-2.5-7b-instruct",
+    "mistralai/ministral-14b-2512",
+    "qwen/qwen-2.5-72b-instruct",
 ]
 N_EXAMPLES_PER_PROMPT = [3, 8, 15]
 N_TRIALS = 100
